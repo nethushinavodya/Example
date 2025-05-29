@@ -21,11 +21,11 @@ import java.util.Map;
 public class EventServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setHeader("Access-Control-Allow-Origin", "*");
+       /* resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type");*/
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/eventDb", "root", "1234");
+            Connection connection = DBConnection.getDbConnection().getConnection();
 
             System.out.println(System.getProperty("java.class.path"));
 
@@ -52,12 +52,11 @@ public class EventServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setHeader("Access-Control-Allow-Origin", "*");
+        /*resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type");*/
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/eventDb", "root", "1234");
+            Connection connection = DBConnection.getDbConnection().getConnection();
             String id = req.getParameter("id");
             String name = req.getParameter("name");
             String description = req.getParameter("description");
@@ -80,8 +79,8 @@ public class EventServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setHeader("Access-Control-Allow-Origin", "*");
-        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+       /* resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");*/
 /*
         resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
 */
@@ -130,9 +129,9 @@ public class EventServlet extends HttpServlet {
     @SneakyThrows
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setHeader("Access-Control-Allow-Origin", "*");
+     /*   resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-
+*/
         Connection connection = DBConnection.getDbConnection().getConnection();
         String id = req.getParameter("id");
         System.out.println(id + "   deleted");

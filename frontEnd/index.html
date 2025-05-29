@@ -169,6 +169,7 @@
     $("#deleteEvent").click(function () {
         let id = $("#eventId").val();
         console.log(id)
+        /*query string param --> http://localhost:8080/App1_Web_exploded/event?id=*/
         $.ajax({
             url: "http://localhost:8080/App1_Web_exploded/event?id=" + id,
             method: "DELETE",
