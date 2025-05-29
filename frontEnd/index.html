@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Title</title>
+    <style>
+        body {
+            padding: 20px;
+            background-color: black;
+            color: white;
+        }
+        table tr th {
+            color: white;
+            background-color: dodgerblue;
+        }
+        table tr td {
+            color: white;
+        }
+        #addEvent:hover {
+            background-color: #009f0c;
+        }
+        #updateEvent:hover {
+            background-color: dodgerblue;
+        }
+        #deleteEvent:hover {
+            background-color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <form class="row g-3">
+        <div class="col-md-6">
+            <label for="eventId" class="form-label">Event Id</label>
+            <input type="text" class="form-control" id="eventId" placeholder="Event Id">
+        </div>
+        <div class="col-md-6">
+            <label for="eventName" class="form-label">Event Name</label>
+            <input type="text" class="form-control" id="eventName" placeholder="Event Name">
+        </div>
+        <div class="col-md-6">
+            <label for="eventDescription" class="form-label">Event Description</label>
+            <input type="text" class="form-control" id="eventDescription" placeholder="Event Description">
+        </div>
+        <div class="col-md-6">
+            <label for="eventDate" class="form-label">Event Date</label>
+            <input type="date" class="form-control" id="eventDate" placeholder="Event Date">
+        </div>
+        <div class="col-md-6">
+            <label for="eventPlace" class="form-label">Event Place</label>
+            <input type="text" class="form-control" id="eventPlace" placeholder="Event Place">
+        </div>
+        <div class="col-12">
+            <button type="button" class="btn btn-success" id="addEvent">Add Event</button>
+            <button type="button" class="btn btn-info" id="updateEvent">Update</button>
+            <button type="button" class="btn btn-danger" id="deleteEvent">Delete</button>
+        </div>
+
+        <table class="table table-bordered border-primary">
+            <tr>
+                <th>Event Id</th>
+                <th>Event Name</th>
+                <th>Event Description</th>
+                <th>Event Date</th>
+                <th>Event Place</th>
+            </tr>
+            <tbody id="eventList"></tbody>
+        </table>
+    </form>
+<script src="../lib/jquery-3.7.1.min.js"></script>
+<script>
+
+    const loadTable = () => {
+        $.ajax({
+            url: "http://localhost:8080/App1_Web_exploded/event",
+            method: "GET",
+            success: function (response) {
+                $("#eventList").empty();
+                console.log(response);
+
+                response.map(event => {
+                    $("#eventList").append(`
+                        <tr>
+                            <td>${event.eid}</td>
+                            <td>${event.ename}</td>
+                            <td>${event.edescription}</td>
+                            <td>${event.edate}</td>
+                            <td>${event.eplace}</td>
+                        </tr>
+                    `);
+                });
+            },
+            error: function (error) {
+                alert('Error');
+                console.log(error);
+            }
+        });
+
+    }
+    loadTable();
+    $("#getAllEvents").click(function () {
+        $.ajax({
+            url: "http://localhost:8080/App1_Web_exploded/event",
+            method: "GET",
+            success: function (response) {
+                alert('Data fetched');
+                console.log(response);
+            },
+            error: function (error) {
+                alert('Error');
+                console.log(error);
+            }
+        });
+    });
+
+    $("#addEvent").click(function () {
+        $.ajax({
+            url: "http://localhost:8080/App1_Web_exploded/event",
+            method: "POST",
+            data: {
+                id: $("#eventId").val(),
+                name: $("#eventName").val(),
+                description: $("#eventDescription").val(),
+                date: $("#eventDate").val(),
+                place: $("#eventPlace").val()
+            },
+            success: function (response) {
+                alert('Data added');
+                console.log(response);
+                loadTable();
+                clearForm();
+            },
+            error: function (error) {
+                alert('Error');
+                console.log(error);
+            }
+        });
+    });
+
+    $("#updateEvent").click(function () {
+        const data = {
+            id: $("#eventId").val(),
+            name: $("#eventName").val(),
+            description: $("#eventDescription").val(),
+            date: $("#eventDate").val(),
+            place: $("#eventPlace").val()
+        }
+
+        console.log(data)
+        $.ajax({
+            url: "http://localhost:8080/App1_Web_exploded/event",
+            method: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+
+        success: function (response) {
+                alert('Data updated');
+                console.log(response);
+                loadTable();
+                clearForm();
+            },
+            error: function (error) {
+                alert('Error');
+                console.log(error);
+            }
+        });
+    });
+
+    $("#deleteEvent").click(function () {
+        let id = $("#eventId").val();
+        console.log(id)
+        $.ajax({
+            url: "http://localhost:8080/App1_Web_exploded/event?id=" + id,
+            method: "DELETE",
+
+            success: function (response) {
+                loadTable();
+                alert('Data deleted');
+                console.log(response);
+                clearForm();
+            },
+            error: function (error) {
+                alert('Error');
+                console.log(error);
+            }
+        });
+    });
+    //onclick
+    $("#eventList").on("click", "tr", function () {
+        let data = $(this).children("td").map(function () {
+            return $(this).text();
+        }).get();
+        console.log(data);
+        $("#eventId").val(data[0]);
+        $("#eventName").val(data[1]);
+        $("#eventDescription").val(data[2]);
+        $("#eventDate").val(data[3]);
+        $("#eventPlace").val(data[4]);
+    });
+    //clear form
+    function clearForm() {
+        $("#eventId").val("");
+        $("#eventName").val("");
+        $("#eventDescription").val("");
+        $("#eventDate").val("");
+        $("#eventPlace").val("");
+    }
+</script>
+</body>
+</html>
