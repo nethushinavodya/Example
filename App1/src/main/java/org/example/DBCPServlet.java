@@ -23,6 +23,8 @@ import java.util.Map;
 @WebServlet("/dbcp")
 public class DBCPServlet extends HttpServlet {
     BasicDataSource dataSource;
+
+    //Connection pool connection to DB
     @Override
     public void init() throws ServletException {
         dataSource = new BasicDataSource();
